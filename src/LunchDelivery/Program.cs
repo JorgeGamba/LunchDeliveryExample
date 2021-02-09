@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LunchDelivery
+﻿namespace LunchDelivery
 {
     class Program
     {

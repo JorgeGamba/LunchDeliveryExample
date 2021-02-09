@@ -2,7 +2,7 @@
 
 namespace LunchDelivery
 {
-    public record DeliveryTripRequest
+    public record DeliveryTripRequest : IResult
     {
         public ICollection<ScheduledDelivery> ScheduledDeliveries;
     }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Doing.BDDExtensions;
 using FluentAssertions;
+using LunchDelivery.Delivery;
+using LunchDelivery.Schedule;
 using NUnit.Framework;
 
-namespace LunchDelivery.UnitSpecs
+namespace LunchDelivery.UnitSpecs.Delivery
 {
     [TestFixture]
     public class DeliveryRouteManagerSpecs : FeatureSpecifications

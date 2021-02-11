@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LunchDelivery
+namespace LunchDelivery.Delivery
 {
     public record ConfirmedDelivery
     {

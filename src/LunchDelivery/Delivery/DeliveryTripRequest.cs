@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using LunchDelivery.Schedule;
 
-namespace LunchDelivery
+namespace LunchDelivery.Delivery
 {
     public record DeliveryTripRequest
     {

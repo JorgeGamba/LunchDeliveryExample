@@ -1,4 +1,6 @@
-﻿namespace LunchDelivery
+﻿using LunchDelivery.Schedule;
+
+namespace LunchDelivery.Delivery
 {
     public record FailedByWrongPositionDelivery : IFailedDelivery
     {

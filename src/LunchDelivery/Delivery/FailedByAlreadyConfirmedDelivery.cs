@@ -1,4 +1,4 @@
-﻿namespace LunchDelivery
+﻿namespace LunchDelivery.Delivery
 {
     public record FailedByAlreadyConfirmedDelivery : IFailedDelivery
     {

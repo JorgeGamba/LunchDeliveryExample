@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LunchDelivery
+namespace LunchDelivery.Delivery
 {
     public record DeliveryTripConfirmed
     {

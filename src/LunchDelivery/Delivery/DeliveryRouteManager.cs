@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using LunchDelivery.Schedule;
 
-namespace LunchDelivery
+namespace LunchDelivery.Delivery
 {
     public class DeliveryRouteManager
     {

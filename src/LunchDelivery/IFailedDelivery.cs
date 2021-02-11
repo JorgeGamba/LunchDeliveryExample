@@ -1,6 +1,6 @@
 ﻿namespace LunchDelivery
 {
-    public interface IResult
+    public interface IFailedDelivery
     {
     }
 }

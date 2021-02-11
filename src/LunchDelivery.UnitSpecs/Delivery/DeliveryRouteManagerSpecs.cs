@@ -645,8 +645,6 @@ namespace LunchDelivery.UnitSpecs.Delivery
             return deliveries;
         }
 
-        private static int _positionNumerator;
-
         private static ScheduledDelivery CreateSomeScheduledDelivery()
         {
             return new()
@@ -655,14 +653,13 @@ namespace LunchDelivery.UnitSpecs.Delivery
             };
         }
 
+        private static int _positionNumerator;
+        private static Position _currentPosition = Position.CreateStartingPosition();
+
         private static Position CreateAnyPosition()
         {
-            return new()
-            {
-                CoordinateX = ++_positionNumerator,
-                CoordinateY = ++_positionNumerator,
-                CardinalPoint = (CardinalPoint) (_positionNumerator / 2 % 4)
-            };
+            _currentPosition = _currentPosition.GetToNewPositionFollowing(new[] {(DroneOperation) (_positionNumerator % 3 + 1)});
+            return _currentPosition;
         }
     }
 }

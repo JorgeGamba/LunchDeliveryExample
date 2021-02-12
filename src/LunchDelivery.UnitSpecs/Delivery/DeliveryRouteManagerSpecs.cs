@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Doing.BDDExtensions;
 using FluentAssertions;
+using LunchDelivery.Delivery;
+using LunchDelivery.Schedule;
 using NUnit.Framework;
 
-namespace LunchDelivery.UnitSpecs
+namespace LunchDelivery.UnitSpecs.Delivery
 {
     [TestFixture]
     public class DeliveryRouteManagerSpecs : FeatureSpecifications
@@ -364,7 +366,7 @@ namespace LunchDelivery.UnitSpecs
                 {
                     SetManagerGettingTheFirstDeliveries(5);
                     _targetScheduledDelivery = _scheduledDeliveries[1];
-                    _targetConfirmedDelivery = new ConfirmedDelivery {Id = _targetScheduledDelivery.Id, DischargePosition = CreateAnyPosition()};
+                    _targetConfirmedDelivery = new ConfirmedDelivery {Id = _targetScheduledDelivery.Id, DischargePosition = CreateSomeScheduledDelivery().FinalTargetPosition};
                     _deliveryTripConfirmed = new DeliveryTripConfirmed
                     {
                         PerformerDroneId = _assignedDrone.Id, 
@@ -629,7 +631,7 @@ namespace LunchDelivery.UnitSpecs
                 return new()
                 {
                     Id = sourceDelivery.Id,
-                    DischargePosition = sourceDelivery.TargetPosition
+                    DischargePosition = sourceDelivery.FinalTargetPosition
                 };
             }
         }
@@ -647,20 +649,15 @@ namespace LunchDelivery.UnitSpecs
 
         private static ScheduledDelivery CreateSomeScheduledDelivery()
         {
-            return new()
+            var districtArea = new DistrictArea
             {
-                Id = Guid.NewGuid(), TargetPosition = CreateAnyPosition()
+                BlocksWide = int.MaxValue,
+                BlocksHigh = int.MaxValue
             };
-        }
-
-        private static Position CreateAnyPosition()
-        {
-            return new()
-            {
-                CoordinateX = ++_positionNumerator,
-                CoordinateY = ++_positionNumerator,
-                CardinalPoint = (CardinalPoint) (_positionNumerator / 2 % 4)
-            };
+            var coverageChecker = new CoverageChecker(districtArea, 0);
+            var movementDescriptions = new[] {ObjectMother.CreateMovementDescriptionFrom(new string('A', ++_positionNumerator))};
+            ScheduledDelivery.TryCreateFrom(movementDescriptions, coverageChecker, out var result, out _);
+            return result;
         }
     }
 }

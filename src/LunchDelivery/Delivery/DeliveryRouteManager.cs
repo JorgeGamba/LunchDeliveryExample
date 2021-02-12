@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using LunchDelivery.Schedule;
 
-namespace LunchDelivery
+namespace LunchDelivery.Delivery
 {
     public class DeliveryRouteManager
     {
@@ -96,7 +97,7 @@ namespace LunchDelivery
         private IEnumerable<IFailedDelivery> GetFailedByWrongPositionDeliveriesGiven(IEnumerable<ConfirmedDelivery> confirmedDeliveries) =>
             from confirmedDelivery in confirmedDeliveries
             let scheduledDelivery = FindMatchingScheduledDeliveryFor(confirmedDelivery)
-            where scheduledDelivery != null && !confirmedDelivery.DischargePosition.Equals(scheduledDelivery.TargetPosition)
+            where scheduledDelivery is not null && !confirmedDelivery.DischargePosition.Equals(scheduledDelivery.FinalTargetPosition)
             select new FailedByWrongPositionDelivery
             {
                 ScheduledDelivery = scheduledDelivery,
@@ -107,7 +108,7 @@ namespace LunchDelivery
         private IEnumerable<IFailedDelivery> GetFailedDeliveriesByAlreadyConfirmedGiven(IEnumerable<ConfirmedDelivery> confirmedDeliveries) =>
             from confirmedDelivery in confirmedDeliveries
             let alreadyConfirmedDelivery = FindMatchingAlreadyConfirmedDeliveryFor(confirmedDelivery)
-            where alreadyConfirmedDelivery != null
+            where alreadyConfirmedDelivery is not null
             select new FailedByAlreadyConfirmedDelivery
             {
                 AlreadyConfirmedDelivery = alreadyConfirmedDelivery,

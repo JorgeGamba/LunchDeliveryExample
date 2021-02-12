@@ -1,6 +1,7 @@
 ﻿using System;
+using LunchDelivery.Schedule;
 
-namespace LunchDelivery
+namespace LunchDelivery.Delivery
 {
     public record ConfirmedDelivery
     {

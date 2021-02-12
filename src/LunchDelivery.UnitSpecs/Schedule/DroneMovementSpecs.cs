@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Doing.BDDExtensions;
 using FluentAssertions;
 using LunchDelivery.Schedule;
 using NUnit.Framework;
+using static LunchDelivery.UnitSpecs.ObjectMother;
 
 namespace LunchDelivery.UnitSpecs.Schedule
 {
@@ -86,7 +86,7 @@ namespace LunchDelivery.UnitSpecs.Schedule
                 _failureReason.Should().NotBeNull();
 
             [Test]
-            public void Should_get_a_failure_reason_telling_the_the_reason() =>
+            public void Should_get_a_failure_reason_telling_the_detail() =>
                 _failureReason.Should().Be($"The movement description '{_source.Value}' has no one advance move.");
         }
 
@@ -108,7 +108,7 @@ namespace LunchDelivery.UnitSpecs.Schedule
                 _failureReason.Should().NotBeNull();
 
             [Test]
-            public void Should_get_a_failure_reason_telling_the_the_reason() =>
+            public void Should_get_a_failure_reason_telling_the_detail() =>
                 _failureReason.Should().Be($"The movement description '{_source.Value}' has no one advance move.");
         }
 
@@ -176,7 +176,7 @@ namespace LunchDelivery.UnitSpecs.Schedule
                 _failureReason.Should().NotBeNull();
 
             [Test]
-            public void Should_get_a_failure_reason_telling_the_the_reason() =>
+            public void Should_get_a_failure_reason_telling_the_detail() =>
                 _failureReason.Should().Be($"The movement description '{_source.Value}' has no one advance move.");
         }
 
@@ -198,19 +198,12 @@ namespace LunchDelivery.UnitSpecs.Schedule
                 _failureReason.Should().NotBeNull();
 
             [Test]
-            public void Should_get_a_failure_reason_telling_the_the_reason() =>
+            public void Should_get_a_failure_reason_telling_the_detail() =>
                 _failureReason.Should().StartWith($"The movement description '{_source.Value}' contain unknown characters.");
 
             [Test]
             public void Should_get_a_failure_reason_telling_the_detailed_reason_from_the_specific_operation() =>
                 _failureReason.Should().Contain("The character '*' is unknown.");
-        }
-
-
-        private static MovementDescription CreateMovementDescriptionFrom(string source)
-        {
-            MovementDescription.TryCreateFrom(source, out var result, out _);
-            return result;
         }
     }
 }

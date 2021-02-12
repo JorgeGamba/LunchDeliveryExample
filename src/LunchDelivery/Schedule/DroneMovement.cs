@@ -8,11 +8,13 @@ namespace LunchDelivery.Schedule
     {
         public ICollection<DroneOperation> DroneOperations;
         public Position TargetPosition;
+        public MovementDescription OriginalMovementDescription;
 
-        private DroneMovement(ICollection<DroneOperation> droneOperations, Position targetPosition)
+        private DroneMovement(ICollection<DroneOperation> droneOperations, Position targetPosition, MovementDescription originalMovementDescription)
         {
             DroneOperations = droneOperations;
             TargetPosition = targetPosition;
+            OriginalMovementDescription = originalMovementDescription;
         }
 
         public static bool TryCreateFrom(MovementDescription source, Position startingPosition, out DroneMovement result, out string failureReason)
@@ -27,7 +29,7 @@ namespace LunchDelivery.Schedule
             }
             var targetPosition = startingPosition.GetToNewPositionFollowing(droneOperations);
             
-            result = new DroneMovement(droneOperations, targetPosition);
+            result = new DroneMovement(droneOperations, targetPosition, source);
             failureReason = null;
             
             return true;
@@ -38,7 +40,7 @@ namespace LunchDelivery.Schedule
         {
             var (droneOperations, failureReasonsByCharacter) = FindDroneOperationsIn(source);
             if (!string.IsNullOrEmpty(failureReasonsByCharacter))
-                failureReason = ExtendFailureReasonWith($"The movement description '{source.Value}' contain unknown characters.", failureReasonsByCharacter);
+                failureReason = Helpers.MergeFailureReasons($"The movement description '{source.Value}' contain unknown characters.", failureReasonsByCharacter);
             
             return droneOperations;
         }
@@ -52,7 +54,7 @@ namespace LunchDelivery.Schedule
                 if (DroneOperationFactory.TryCreateFrom(character, out var currentDroneOperation, out var failureReason))
                     builder.Add(currentDroneOperation);
                 else
-                    allFailureReasons = ExtendFailureReasonWith(allFailureReasons, failureReason);
+                    allFailureReasons = Helpers.MergeFailureReasons(allFailureReasons, failureReason);
             }
 
             return (builder.ToImmutable(), allFailureReasons);
@@ -61,12 +63,7 @@ namespace LunchDelivery.Schedule
         private static void ValidateThereIsAtLeastAnAdvanceIn(MovementDescription source, ICollection<DroneOperation> droneOperations, ref string failureReason)
         {
             if (!droneOperations.Contains(DroneOperation.Advance))
-                failureReason = ExtendFailureReasonWith(failureReason, $"The movement description '{source.Value}' has no one advance move.");
+                failureReason = Helpers.MergeFailureReasons(failureReason, $"The movement description '{source.Value}' has no one advance move.");
         }
-
-        private static string ExtendFailureReasonWith(string formerFailureReason, string additionalFailureReason) =>
-            formerFailureReason is null
-                ? additionalFailureReason
-                : formerFailureReason + Environment.NewLine + additionalFailureReason;
     }
 }

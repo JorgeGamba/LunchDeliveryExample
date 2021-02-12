@@ -97,7 +97,7 @@ namespace LunchDelivery.Delivery
         private IEnumerable<IFailedDelivery> GetFailedByWrongPositionDeliveriesGiven(IEnumerable<ConfirmedDelivery> confirmedDeliveries) =>
             from confirmedDelivery in confirmedDeliveries
             let scheduledDelivery = FindMatchingScheduledDeliveryFor(confirmedDelivery)
-            where scheduledDelivery is not null && !confirmedDelivery.DischargePosition.Equals(scheduledDelivery.TargetPosition)
+            where scheduledDelivery is not null && !confirmedDelivery.DischargePosition.Equals(scheduledDelivery.FinalTargetPosition)
             select new FailedByWrongPositionDelivery
             {
                 ScheduledDelivery = scheduledDelivery,

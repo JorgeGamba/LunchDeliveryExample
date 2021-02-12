@@ -166,7 +166,7 @@ namespace LunchDelivery.UnitSpecs.Schedule
                 _failureReason.Should().NotBeNull();
 
             [Test]
-            public void Should_get_a_failure_reason_telling_the_the_reason() =>
+            public void Should_get_a_failure_reason_telling_the_detail() =>
                 _failureReason.Should().Be("The character '^' is unknown.");
         }
     }

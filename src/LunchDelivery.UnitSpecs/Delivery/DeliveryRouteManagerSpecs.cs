@@ -366,7 +366,7 @@ namespace LunchDelivery.UnitSpecs.Delivery
                 {
                     SetManagerGettingTheFirstDeliveries(5);
                     _targetScheduledDelivery = _scheduledDeliveries[1];
-                    _targetConfirmedDelivery = new ConfirmedDelivery {Id = _targetScheduledDelivery.Id, DischargePosition = CreateAnyPosition()};
+                    _targetConfirmedDelivery = new ConfirmedDelivery {Id = _targetScheduledDelivery.Id, DischargePosition = CreateSomeScheduledDelivery().FinalTargetPosition};
                     _deliveryTripConfirmed = new DeliveryTripConfirmed
                     {
                         PerformerDroneId = _assignedDrone.Id, 
@@ -631,7 +631,7 @@ namespace LunchDelivery.UnitSpecs.Delivery
                 return new()
                 {
                     Id = sourceDelivery.Id,
-                    DischargePosition = sourceDelivery.TargetPosition
+                    DischargePosition = sourceDelivery.FinalTargetPosition
                 };
             }
         }
@@ -645,21 +645,19 @@ namespace LunchDelivery.UnitSpecs.Delivery
             return deliveries;
         }
 
+        private static int _positionNumerator;
+
         private static ScheduledDelivery CreateSomeScheduledDelivery()
         {
-            return new()
+            var districtArea = new DistrictArea
             {
-                Id = Guid.NewGuid(), TargetPosition = CreateAnyPosition()
+                BlocksWide = int.MaxValue,
+                BlocksHigh = int.MaxValue
             };
-        }
-
-        private static int _positionNumerator;
-        private static Position _currentPosition = Position.CreateStartingPosition();
-
-        private static Position CreateAnyPosition()
-        {
-            _currentPosition = _currentPosition.GetToNewPositionFollowing(new[] {(DroneOperation) (_positionNumerator % 3 + 1)});
-            return _currentPosition;
+            var coverageChecker = new CoverageChecker(districtArea, 0);
+            var movementDescriptions = new[] {ObjectMother.CreateMovementDescriptionFrom(new string('A', ++_positionNumerator))};
+            ScheduledDelivery.TryCreateFrom(movementDescriptions, coverageChecker, out var result, out _);
+            return result;
         }
     }
 }
